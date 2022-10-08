@@ -6,7 +6,7 @@ supported shortcodes
 2. curl.api.post
 3. curl.page.get
 
-`
+```
 [template.set url_two='https://wpoets.com/api' /]
 [arr.create o.set='template.data']
   [username _value='' /]
@@ -35,4 +35,4 @@ supported shortcodes
 [curl.api.get url='{template.url_two}' data='{template.data}' o.set='template.urltwo' c.ignore=t/]
 
 [curl.api.post url='{template.url_two}' data='{template.data}' header='{template.headers}' proxy='{template.proxy}' o.set='template.urltwo' c.ignore=t/]
-`
+```
