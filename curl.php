@@ -142,7 +142,7 @@ function curl_call($method, $url, $data=null, $headers=null, $proxy=null){
    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
    curl_setopt($curl, CURLOPT_TIMEOUT, 60);
-   
+  // curl_setopt($curl, CURLOPT_HEADER,  true);
    //proxy
    if(is_array($proxy)){
 		//Set the proxy IP.
@@ -177,16 +177,17 @@ function curl_call($method, $url, $data=null, $headers=null, $proxy=null){
    if(!$result){
 		$temp_debug=$live_debug_event;
 		$temp_debug['error']='yes';
-		$temp_debug['error_type']='curl url is missing';
+		$temp_debug['error_type']='curl_error';
+		$temp_debug['error_message']=curl_error($curl);;
 		\aw2\live_debug\publish_event(['event'=>$temp_debug,'bgcolor'=>'#F0EBE3']);
-		return;
+		return array();
    }
+   $info = curl_getinfo($curl);
    curl_close($curl);
-   
-   /**$temp_arr=array(
-	"header"=>$result_headers,
-	"body"=>$result
+   $temp_arr=array(
+	"info"=>$info,
+	"result"=>$result
    );
-   **/
-   return $result;
+
+   return $temp_arr;
 }
