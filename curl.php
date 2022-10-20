@@ -146,13 +146,13 @@ function curl_call($method, $url, $data=null, $headers=null, $proxy=null){
    //proxy
    if(is_array($proxy)){
 		//Set the proxy IP.
-		curl_setopt($ch, CURLOPT_PROXY, $proxy['host']);
+		curl_setopt($curl, CURLOPT_PROXY, $proxy['host']);
 
 		//Set the port.
-		curl_setopt($ch, CURLOPT_PROXYPORT, $proxy['port']);
+		curl_setopt($curl, CURLOPT_PROXYPORT, $proxy['port']);
 		if(isset($proxy['username'])){
 			//Specify the username and password.
-			curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxy['username'].":".$proxy['password']);
+			curl_setopt($curl, CURLOPT_PROXYUSERPWD, $proxy['username'].":".$proxy['password']);
 		}
    }
     /**
