@@ -1,6 +1,10 @@
 # curl-handler
 provides support for using curl via shortcodes
 
+you can use following command to include it using composer
+
+`composer require wpoets/curl-handler`
+
 supported shortcodes
 1. curl.api.get
 2. curl.api.post
