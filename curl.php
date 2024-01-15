@@ -142,7 +142,7 @@ function curl_call($method, $url, $data=null, $headers=null, $proxy=null){
    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
    curl_setopt($curl, CURLOPT_TIMEOUT, 60);
-  // curl_setopt($curl, CURLOPT_HEADER,  true);
+   curl_setopt($curl, CURLOPT_HEADER,  true);
    //proxy
    if(is_array($proxy)){
 		//Set the proxy IP.
@@ -155,6 +155,7 @@ function curl_call($method, $url, $data=null, $headers=null, $proxy=null){
 			curl_setopt($curl, CURLOPT_PROXYUSERPWD, $proxy['username'].":".$proxy['password']);
 		}
    }
+
     /**
     $result_headers=[];
     // this function is called by curl for each header received
@@ -174,6 +175,23 @@ function curl_call($method, $url, $data=null, $headers=null, $proxy=null){
      **/ 
    // EXECUTE:
    $result = curl_exec($curl);
+
+   // Split headers and content
+	list($headers, $content) = explode("\r\n\r\n", $result, 2);
+
+	// Parse and print the cookies from the response headers
+	$cookieHeader = explode("\n", $headers);
+	$cookies=array();
+	foreach ($cookieHeader as $header) {
+		if (strpos($header, 'Set-Cookie:') !== false) {
+			$cookie = trim(str_replace('Set-Cookie:', '', $header));
+			$cookieParts = explode(';', $cookie, 2);
+			$cookiePair = explode('=', $cookieParts[0], 2);
+			$cookies[trim($cookiePair[0])] = trim($cookiePair[1]);
+			
+		}
+	}
+
    if(!$result){
 		$temp_debug=$live_debug_event;
 		$temp_debug['error']='yes';
@@ -186,7 +204,8 @@ function curl_call($method, $url, $data=null, $headers=null, $proxy=null){
    curl_close($curl);
    $temp_arr=array(
 	"info"=>$info,
-	"result"=>$result
+	"cookies"=>$cookies,
+	"result"=>$content
    );
 
    return $temp_arr;

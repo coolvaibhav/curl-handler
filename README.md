@@ -40,3 +40,5 @@ supported shortcodes
 
 [curl.api.post url='{template.url_two}' data='{template.data}' header='{template.headers}' proxy='{template.proxy}' o.set='template.urltwo' c.ignore=t/]
 ```
+
+Added support to return cookies as well with the response  from v1.3 onwards.
