@@ -175,23 +175,19 @@ function curl_call($method, $url, $data=null, $headers=null, $proxy=null){
      **/ 
    // EXECUTE:
    $result = curl_exec($curl);
+   
+ 	  // Split headers and content
+	//$response_array = explode("\r\n\r\n", $result);
+	
+	$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+  	$headers = substr($result, 0, $header_size);
+  	$content = substr($result, $header_size);
 
-   // Split headers and content
-	list($headers, $content) = explode("\r\n\r\n", $result, 2);
-
+	$headers_arr = extractHeaders($headers);
 	// Parse and print the cookies from the response headers
-	$cookieHeader = explode("\n", $headers);
-	$cookies=array();
-	foreach ($cookieHeader as $header) {
-		if (strpos($header, 'Set-Cookie:') !== false) {
-			$cookie = trim(str_replace('Set-Cookie:', '', $header));
-			$cookieParts = explode(';', $cookie, 2);
-			$cookiePair = explode('=', $cookieParts[0], 2);
-			$cookies[trim($cookiePair[0])] = trim($cookiePair[1]);
-			
-		}
-	}
-
+	//$content = array_pop($response_array);
+	$cookies = extractCookies($headers);
+		
    if(!$result){
 		$temp_debug=$live_debug_event;
 		$temp_debug['error']='yes';
@@ -200,13 +196,50 @@ function curl_call($method, $url, $data=null, $headers=null, $proxy=null){
 		\aw2\live_debug\publish_event(['event'=>$temp_debug,'bgcolor'=>'#F0EBE3']);
 		return array();
    }
+
    $info = curl_getinfo($curl);
    curl_close($curl);
    $temp_arr=array(
 	"info"=>$info,
+	"headers"=>$headers_arr,
 	"cookies"=>$cookies,
 	"result"=>$content
    );
-
    return $temp_arr;
+}
+
+// Function to extract cookies from a header block
+function extractCookies($headerBlock) {
+    $cookieHeader = explode("\n", $headerBlock);
+    $cookies = [];
+
+    foreach ($cookieHeader as $header) {
+        if (strpos($header, 'Set-Cookie:') !== false) {
+            $cookie = trim(str_replace('Set-Cookie:', '', $header));
+            $cookieParts = explode(';', $cookie, 2);
+            $cookiePair = explode('=', $cookieParts[0], 2);
+            $cookies[trim($cookiePair[0])] = trim($cookiePair[1]);
+        }
+    }
+
+    return $cookies;
+}
+
+function extractHeaders($headerBlock){
+	  // Convert the $headers string to an indexed array
+	  $headers_indexed_arr = explode("\r\n", $headerBlock);
+
+	  // Define as array before using in loop
+	  $headers_arr = array();
+	  // Remember the status message in a separate variable
+	  $status_message = array_shift($headers_indexed_arr);
+  
+	  // Create an associative array containing the response headers
+	  foreach ($headers_indexed_arr as $value) {
+		  if(false !== ($matches = explode(':', $value, 2))) {
+			  $headers_arr["{$matches[0]}"] = trim($matches[1]);
+		  }                
+	  }
+	  $headers_arr = array_filter($headers_arr);
+	  return $headers_arr;
 }
