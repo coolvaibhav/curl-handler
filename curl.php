@@ -141,7 +141,7 @@ function curl_call($method, $url, $data=null, $headers=null, $proxy=null){
 	
    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-   curl_setopt($curl, CURLOPT_TIMEOUT, 60);
+   curl_setopt($curl, CURLOPT_TIMEOUT, 600);
    curl_setopt($curl, CURLOPT_HEADER,  true);
    //proxy
    if(is_array($proxy)){
