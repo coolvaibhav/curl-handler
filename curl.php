@@ -36,7 +36,7 @@ function api_get($atts=null,$content=null,$shortcode=null){
 }
 
 
-\aw2_library::add_service('curl.api.post','CURL GET for API',['func'=>'api_post','namespace'=>__NAMESPACE__]);
+\aw2_library::add_service('curl.api.post','CURL POST for API',['func'=>'api_post','namespace'=>__NAMESPACE__]);
 function api_post($atts=null,$content=null,$shortcode=null){
 	if (\aw2_library::pre_actions('all', $atts, $content, $shortcode) == false) {
         return;
@@ -52,7 +52,7 @@ function api_post($atts=null,$content=null,$shortcode=null){
 	$live_debug_event=array();
 	$live_debug_event['flow']='curl';
 	$live_debug_event['action']='curl.called';
-	$live_debug_event['stream']='curl.api.get';
+	$live_debug_event['stream']='curl.api.post';
 	
 	
     if(is_null($url)) { 
@@ -71,7 +71,7 @@ function api_post($atts=null,$content=null,$shortcode=null){
 }
 
 
-\aw2_library::add_service('curl.api.patch','CURL GET for API',['func'=>'api_patch','namespace'=>__NAMESPACE__]);
+\aw2_library::add_service('curl.api.patch','CURL PATCH for API',['func'=>'api_patch','namespace'=>__NAMESPACE__]);
 function api_patch($atts=null,$content=null,$shortcode=null){
 	if (\aw2_library::pre_actions('all', $atts, $content, $shortcode) == false) {
         return;
@@ -87,7 +87,7 @@ function api_patch($atts=null,$content=null,$shortcode=null){
 	$live_debug_event=array();
 	$live_debug_event['flow']='curl';
 	$live_debug_event['action']='curl.called';
-	$live_debug_event['stream']='curl.api.get';
+	$live_debug_event['stream']='curl.api.patch';
 	
 	
     if(is_null($url)) { 
