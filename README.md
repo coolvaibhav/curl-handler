@@ -1,7 +1,7 @@
 # curl-handler
 provides support for using curl via shortcodes
 
-you can use following command to include it using composer
+You can use the following command to include it using the composer
 
 `composer require wpoets/curl-handler`
 
@@ -9,6 +9,7 @@ supported shortcodes
 1. curl.api.get
 2. curl.api.post
 3. curl.page.get
+4. curl.api.patch
 
 ```
 [template.set url_two='https://wpoets.com/api' /]
@@ -41,4 +42,4 @@ supported shortcodes
 [curl.api.post url='{template.url_two}' data='{template.data}' header='{template.headers}' proxy='{template.proxy}' o.set='template.urltwo' c.ignore=t/]
 ```
 
-Added support to return cookies as well with the response  from v1.3 onwards.
+Support was also added to return cookies, with the response from v1.3 onwards.
