@@ -71,6 +71,41 @@ function api_post($atts=null,$content=null,$shortcode=null){
 }
 
 
+\aw2_library::add_service('curl.api.patch','CURL GET for API',['func'=>'api_patch','namespace'=>__NAMESPACE__]);
+function api_patch($atts=null,$content=null,$shortcode=null){
+	if (\aw2_library::pre_actions('all', $atts, $content, $shortcode) == false) {
+        return;
+    }
+    
+    extract(\aw2_library::shortcode_atts(array(
+    'data' => null,
+    'url' => null,
+    'proxy' => null,
+    'header' => null
+    ), $atts));
+	
+	$live_debug_event=array();
+	$live_debug_event['flow']='curl';
+	$live_debug_event['action']='curl.called';
+	$live_debug_event['stream']='curl.api.get';
+	
+	
+    if(is_null($url)) { 
+			$temp_debug=$live_debug_event;
+			$temp_debug['error']='yes';
+			$temp_debug['error_type']='curl url is missing';
+		\aw2\live_debug\publish_event(['event'=>$temp_debug,'bgcolor'=>'#F0EBE3']);
+		return;
+	}
+	
+	$return_value = curl_call('PATCH', $url, $data, $header, $proxy);
+	
+    $return_value = \aw2_library::post_actions('all', $return_value, $atts);
+    return $return_value;
+    
+}
+
+
 \aw2_library::add_service('curl.page.get','CURL GET for API',['func'=>'page_get','namespace'=>__NAMESPACE__]);
 function page_get($atts=null,$content=null,$shortcode=null){
 	if (\aw2_library::pre_actions('all', $atts, $content, $shortcode) == false) {
@@ -120,6 +155,11 @@ function curl_call($method, $url, $data=null, $headers=null, $proxy=null){
 		 break;
 	  case "PUT":
 		 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+		 if ($data)
+			curl_setopt($curl, CURLOPT_POSTFIELDS, $data);			 					
+		 break;
+	  case "PATCH":
+		 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PATCH");
 		 if ($data)
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $data);			 					
 		 break;
