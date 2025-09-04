@@ -276,7 +276,8 @@ function extractHeaders($headerBlock){
   
 	  // Create an associative array containing the response headers
 	  foreach ($headers_indexed_arr as $value) {
-		  if(false !== ($matches = explode(':', $value, 2))) {
+		    $matches = explode(':', $value, 2);
+		  if(isset($matches[1])) {
 			  $headers_arr["{$matches[0]}"] = trim($matches[1]);
 		  }                
 	  }
